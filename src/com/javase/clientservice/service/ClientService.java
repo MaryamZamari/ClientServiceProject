@@ -10,12 +10,9 @@ public class ClientService {
     public ClientService(ClientManagementSystem managementSystem) {
         this.managementSystem = managementSystem;
     }
-
     public ClientService() {
 
     }
-
-
     public void addClient(Client client){
         managementSystem.getClientList().add(client);
         System.out.println("Client was added successfully. Client details: " + client.toString());
@@ -27,6 +24,7 @@ public class ClientService {
         }else if(clientDetail instanceof String){
             selectedClient =  getClientByName((String) clientDetail);
         }
+        System.out.println("The searched client is: " + selectedClient.toString());
         return selectedClient;
     }
     public Client getClientById(int clientId){
@@ -46,10 +44,12 @@ public class ClientService {
                 .orElseThrow(()-> new NoSuchElementException("The client with the Id" + clientId + "does not exist!Try again!"));
         int index= managementSystem.getClientList().indexOf(c);
         managementSystem.getClientList().set(index, newClient);
+        System.out.println("Modification was done! The updated client is: " + c.toString());
     }
     public void deleteClientById(int cliendId){
         Client clientToDelete= getClientById(cliendId);
         managementSystem.getClientList().remove(clientToDelete);
+        System.out.println("Client removed successfully! The updated list is: " + managementSystem.getClientList().toString());
     }
     public void printAllNumbersOfClient(int cliendId) {
         Client client= getClientById(cliendId);

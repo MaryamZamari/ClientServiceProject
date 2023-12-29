@@ -19,6 +19,14 @@ public abstract class Client {
         this.address= address;
         this.numbers= numbers;
     }
+    public Client(int id, String name, String fiscalCode, String email, String address, List<ContactNumber> numbers){
+        this.id= id;
+        this.name= capitaliseFirstLetter(name);
+        this.fiscalCode= fiscalCode;
+        this.email= email;
+        this.address= address;
+        this.numbers= numbers;
+    }
 
     public int getId() {
         return id;
@@ -26,6 +34,10 @@ public abstract class Client {
 
     public String getName() {
         return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getFiscalCode() {

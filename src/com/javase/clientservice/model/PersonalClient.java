@@ -5,36 +5,21 @@ import java.util.Date;
 import java.util.List;
 
 public class PersonalClient extends Client{
-    private int id;
+   // private int id;
     private String surname;
     private Date birthday;
     private String nationality;
 
 
-    public PersonalClient(String name, String surname,Date birthday,
+    public PersonalClient(int id, String name, String surname, Date birthday,
                           String nationality, String fiscalCode, String email,
                           String address, List<ContactNumber> numbers) {
-        super(name, fiscalCode, email, address, numbers);
-        this.id= IdGeneratorService.generateUniqueClientId();
+        super(id, name, fiscalCode, email, address, numbers);
         this.surname= capitaliseFirstLetter(surname);
         this.birthday= birthday;
         this.nationality= nationality;
     }
 
-    public PersonalClient(int i, String name, String surname, Date birthday,
-                          String nationality, String fiscalCode, String email,
-                          String address, List<ContactNumber> numbers) {
-        super(name, fiscalCode, email, address, numbers);
-        this.id= i;
-        this.surname= capitaliseFirstLetter(surname);
-        this.birthday= birthday;
-        this.nationality= nationality;
-    }
-
-    @Override
-    public int getId() {
-        return id;
-    }
 
     public String getSurname() {
         return surname;
@@ -63,8 +48,13 @@ public class PersonalClient extends Client{
 
     @Override
     public String toString() {
-        return "PersonalClient{" +
-                "id=" + id +
+                return "Client_PersonalClient{" +
+                "id=" + super.getId() +
+                ", name='" + super.getName() + '\'' +
+                ", fiscalCode='" + super.getFiscalCode() + '\'' +
+                ", email='" + super.getEmail() + '\'' +
+                ", address='" + super.getAddress() + '\'' +
+                ", numberList=" + super.getNumberList() +
                 ", surname='" + surname + '\'' +
                 ", birthday=" + birthday +
                 ", nationality='" + nationality + '\'' +

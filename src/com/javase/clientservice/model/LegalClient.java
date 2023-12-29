@@ -5,7 +5,6 @@ import java.util.Date;
 import java.util.List;
 
 public class LegalClient extends Client{
-    private int id;
     private String contactPerson;
     private String industry;
     private String registrationNumber;
@@ -13,24 +12,10 @@ public class LegalClient extends Client{
     private String website;
     private int employeeCount;
 
-    public LegalClient(String name, String contactPerson, String industry, String fiscalCode,
-                       String registrationNumber, Date establishmentDate,String email,String website,
-                       String address, int employeeCount, List<ContactNumber> numbers){
-        super(name, fiscalCode, email, address, numbers);
-        this.id= IdGeneratorService.generateUniqueClientId();
-        this.contactPerson= contactPerson;
-        this.industry= industry;
-        this.registrationNumber= registrationNumber;
-        this.establishmentDate= establishmentDate;
-        this.website= website;
-        this.employeeCount= employeeCount;
-    }
-
     public LegalClient(int id, String name, String contactPerson, String industry, String fiscalCode,
                        String registrationNumber, Date establishmentDate,String email,String website,
                        String address, int employeeCount, List<ContactNumber> numbers){
-        super(name, fiscalCode, email, address, numbers);
-        this.id= id;
+        super(id, name, fiscalCode, email, address, numbers);
         this.contactPerson= contactPerson;
         this.industry= industry;
         this.registrationNumber= registrationNumber;
@@ -39,10 +24,6 @@ public class LegalClient extends Client{
         this.employeeCount= employeeCount;
     }
 
-    @Override
-    public int getId() {
-        return id;
-    }
 
     public String getContactPerson() {
         return contactPerson;
@@ -86,8 +67,13 @@ public class LegalClient extends Client{
 
     @Override
     public String toString() {
-        return "LegalClient{" +
-                "id=" + id +
+        return "Client_LegalClient{" +
+                "id=" + super.getId() +
+                ", name='" + super.getName() + '\'' +
+                ", fiscalCode='" + super.getFiscalCode() + '\'' +
+                ", email='" + super.getEmail() + '\'' +
+                ", address='" + super.getAddress() + '\'' +
+                ", numberList=" + super.getNumberList() +
                 ", contactPerson='" + contactPerson + '\'' +
                 ", industry='" + industry + '\'' +
                 ", registrationNumber='" + registrationNumber + '\'' +

@@ -2,7 +2,6 @@ package com.javase.clientservice.view;
 
 import com.javase.clientservice.model.*;
 import com.javase.clientservice.service.IdGeneratorService;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -16,7 +15,7 @@ public class Console {
                 "--- select a menu item: --- \n" +
                 "0.Exit\n" +
                 "1.Add a new client.\n" +
-                "2.Select a client \n" +
+                "2.Search a client \n" +
                 "3.Edit a client\n" +
                 "4.Removing a client \n" +
                 "5.Printing all the Clients.\n" +
@@ -66,10 +65,15 @@ public class Console {
     }
 
     public Client getClientInfoFromUserForEdit(Scanner input, Client oldClient) throws ParseException {
+        System.out.println("Enter new Name: ");
+        String name = input.nextLine();
         System.out.println("Enter new Email: ");
         String email = input.nextLine();
         System.out.println("Enter new Address: ");
         String address = input.nextLine();
+        input.nextLine();
+
+        oldClient.setName(name);
         oldClient.setEmail(email);
         oldClient.setAddress(address);
 
@@ -78,6 +82,7 @@ public class Console {
             String surname = input.nextLine();
             System.out.println("Enter new nationality: ");
             String nationality = input.next();
+            input.nextLine();
             ((PersonalClient) oldClient).setSurname(surname);
             ((PersonalClient) oldClient).setNationality(nationality);
 
@@ -90,6 +95,7 @@ public class Console {
             String website = input.next();
             System.out.println("enter new Employee Count: ");
             int count = Integer.parseInt(input.next());
+            input.nextLine();
 
             ((LegalClient) oldClient).setContactPerson(person);
             ((LegalClient) oldClient).setIndustry(industry);
@@ -137,7 +143,7 @@ public class Console {
             int id= Integer.parseInt(input.nextLine());
             return id;
         }
-        return 1;
+        return null;
     }
     public String getNewNumberToUpdate(Scanner input){
         System.out.println("enter new number: \n");
@@ -154,6 +160,7 @@ public class Console {
         String nationality = input.next();
         personalClient = new PersonalClient(IdGeneratorService.generateUniqueClientId(), name, surname,
                 birthdate, nationality, fiscalCode, email, address, numbers);
+        System.out.println("Personal client: " + personalClient.toString());
         System.out.println();
         return personalClient;
     }

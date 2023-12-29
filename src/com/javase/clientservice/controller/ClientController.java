@@ -8,7 +8,6 @@ import com.javase.clientservice.view.Console;
 import java.text.ParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
-
 import static java.lang.Integer.parseInt;
 
 /***
@@ -22,11 +21,7 @@ public class ClientController {
     private static NumberService numberService = new NumberService();
     private static ClientService clientService= new ClientService();
     private static Console view = new Console();
-    public void initialize(NumberService numberService, ClientService clientService, Console view){
-        this.numberService= numberService;
-        this.clientService= clientService;
-        this.view= view;
-    }
+
     public ClientController(){
 
     }
@@ -44,8 +39,7 @@ public class ClientController {
                         break;
                     case 2:
                         Object clientDetailToSearch= view.getClientDetailForSelection(input);
-                        Client client= clientService.getClient(clientDetailToSearch);
-                        searchClient(client);
+                        Client client= searchClient(clientDetailToSearch);
                         break;
                     case 3:
                         int clientId= view.getIdFromUser(input);
@@ -108,6 +102,24 @@ public class ClientController {
         }
     }
 
+
+    public void addClient(Client client){
+        clientService.addClient(client);
+    }
+    public static Client searchClient(Object clientDetailToSearch) {
+        return clientService.getClient(clientDetailToSearch);
+    }
+
+    public void deleteClient(int id){
+        clientService.deleteClientById(id);
+    }
+
+    public void updateClient(int id, Client newClient){
+        clientService.updateClient(id, newClient);
+    }
+    public void printAllClients(){
+        clientService.printAllClients();
+    }
     public void addNumber(ContactNumber newNumber) {
         numberService.addNumber(newNumber);
     }
@@ -120,29 +132,10 @@ public class ClientController {
         numberService.deleteNumberById(id);
     }
 
-    public void addClient(Client client){
-        clientService.addClient(client);
-    }
-
-    public  <T>  void searchClient(T clientDetail){
-        Client client= clientService.getClient(clientDetail);
-        System.out.println("The retrieved client is: "+ client.toString());
-    }
-
-    public void deleteClient(int id){
-        clientService.deleteClientById(id);
-    }
-
-    public void updateClient(int id, Client newClient){
-        clientService.updateClient(id, newClient);
-    }
-
     public void printAllNumbersOfClient(int clientId){
         clientService.printAllNumbersOfClient(clientId);
     }
-    public void printAllClients(){
-        clientService.printAllClients();
-    }
+
 
 
 }
