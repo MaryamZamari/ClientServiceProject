@@ -34,22 +34,22 @@ public class ClientController {
                 choice= parseInt(input.nextLine());
                 switch(choice){
                     case 1:
-                        Client newClient= view.getClientDetailsFromUser(input);
+                        Client newClient= view.getClientDetailsFromUser();
                         addClient(newClient);
                         break;
                     case 2:
-                        Object clientDetailToSearch= view.getClientDetailForSelection(input);
+                        Object clientDetailToSearch= view.getClientDetailForSelection();
                         Client client= searchClient(clientDetailToSearch);
                         break;
                     case 3:
-                        int clientId= view.getIdFromUser(input);
+                        int clientId= view.getIdFromUser();
                         Client oldClient= clientService.getClientById(clientId);
-                        Client updatedClient = view.getClientInfoFromUserForEdit(input, oldClient);
+                        Client updatedClient = view.getClientInfoFromUserForEdit(oldClient);
                         updateClient(clientId, updatedClient);
                         System.out.println("If you need to update the numbers too, proceed with the Number Menu (6)!");
                         break;
                     case 4:
-                        clientId = view.getIdFromUser(input);
+                        clientId = view.getIdFromUser();
                         deleteClient(clientId);
                         break;
                     case 5:
@@ -63,20 +63,20 @@ public class ClientController {
                         do{
                             switch(numberChoice){
                                 case 'A':
-                                    ContactNumber newNumber= view.getNumberDetailsFromUser(input);
+                                    ContactNumber newNumber= view.getNumberDetailsFromUser();
                                     addNumber(newNumber);
                                     break;
                                 case 'B':
-                                    int id= view.getIdFromUser(input);
+                                    int id= view.getIdFromUser();
                                     printAllNumbersOfClient(id);
                                     break;
                                 case 'C':
-                                    id= view.getIdFromUser(input);
+                                    id= view.getIdFromUser();
                                     deleteNumber(id);
                                     break;
                                 case 'D':
-                                    id= view.getIdFromUser(input);
-                                    String updatedNumber= view.getNewNumberToUpdate(input);
+                                    id= view.getIdFromUser();
+                                    String updatedNumber= view.getNewNumberToUpdate();
                                     updateNumber(id, updatedNumber);
                                     break;
                                 default: if(numberChoice != 'X'){
@@ -90,7 +90,7 @@ public class ClientController {
                             System.out.println("the selected number is invalid. try again!");
                         }
                 }
-            }while(choice != 00);
+            }while(choice != 0);
         }catch(ParseException ex){
             ex.printStackTrace();
             System.out.println("could not parse the String to produce a Date. check your input or the code!");

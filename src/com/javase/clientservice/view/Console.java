@@ -7,8 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import static java.lang.Integer.parseInt;
 
-public class Console {
+public class Console implements AutoCloseable{
     //menu + get details from user for various operations needed in the service classes.
+    private static final Scanner scanner= new Scanner(System.in);
     public void printMenu() {
         System.out.println();
         System.out.println("Welcome to Client Management Portal! \n" +
@@ -33,69 +34,50 @@ public class Console {
         );
     }
 
-    public Client getClientDetailsFromUser(Scanner input) throws ParseException {
+    public Client getClientDetailsFromUser() throws ParseException {
         Client newClient = null;
-        System.out.println("Enter Name: ");
-        String name = input.nextLine();
-        System.out.println("Enter FiscalCode: ");
-        String fiscalCode = input.nextLine();
-        System.out.println("Enter new Email: ");
-        String email = input.nextLine();
-        System.out.println("Enter new Address: ");
-        String address = input.nextLine();
+        String name = (String) getUserInput("Enter Name: ", "str");
+        String fiscalCode = (String) getUserInput("Enter FiscalCode: ", "str");
+        String email = (String) getUserInput("Enter new Email: ", "str");
+        String address = (String) getUserInput("Enter new Address: ", "str");
 
-        System.out.println("how many numbers do you want to add?");
-        int n = parseInt(input.next());
-        input.nextLine();
+        int n= (int) getUserInput("how many numbers do you want to add?", "int");
         List<ContactNumber> numbers = new ArrayList<>();
         for (int i = 0; i < n; i++) {
-            ContactNumber number = this.getNumberDetailsFromUser(input);
+            ContactNumber number = this.getNumberDetailsFromUser();
             numbers.add(number);
         }
-        System.out.println("Enter P for Personal and L for Legal client: ");
-        char typeInput = input.next().toUpperCase().charAt(0);
-        input.nextLine();
+        char typeInput= (char)getUserInput("Enter P for Personal and L for Legal client: ", "char");
         if (typeInput == 'P') {
-              newClient= createPersonalClientFromInput(name, fiscalCode, address, email,numbers, input);
+              newClient= createPersonalClientFromInput(name, fiscalCode, address, email,numbers);
         } else if (typeInput == 'L') {
-               newClient= createLegalClientFromInput(name, fiscalCode, address, email, numbers, input);
+               newClient= createLegalClientFromInput(name, fiscalCode, address, email, numbers);
         }
-        input.nextLine();
+        scanner.nextLine();
         return newClient;
     }
 
-    public Client getClientInfoFromUserForEdit(Scanner input, Client oldClient) throws ParseException {
-        System.out.println("Enter new Name: ");
-        String name = input.nextLine();
-        System.out.println("Enter new Email: ");
-        String email = input.nextLine();
-        System.out.println("Enter new Address: ");
-        String address = input.nextLine();
-        input.nextLine();
+    public Client getClientInfoFromUserForEdit(Client oldClient){
+        String name= (String) getUserInput("Enter new Name: " , "str");
+        String email= (String) getUserInput("Enter new Email: ", "str");
+        String address= (String) getUserInput("Enter new Address: ", "str");
 
         oldClient.setName(name);
         oldClient.setEmail(email);
         oldClient.setAddress(address);
 
         if (oldClient instanceof PersonalClient) {
-            System.out.println("Enter new surname: ");
-            String surname = input.nextLine();
-            System.out.println("Enter new nationality: ");
-            String nationality = input.next();
-            input.nextLine();
+            String surname= (String) getUserInput("Enter new surname: " , "str");
+            String nationality= (String) getUserInput("Enter new nationality: " , "str");
+
             ((PersonalClient) oldClient).setSurname(surname);
             ((PersonalClient) oldClient).setNationality(nationality);
 
         } else if (oldClient instanceof LegalClient) {
-            System.out.println("enter new Contact Person: ");
-            String person = input.next();
-            System.out.println("enter new Industry: ");
-            String industry = input.next();
-            System.out.println("enter new website: ");
-            String website = input.next();
-            System.out.println("enter new Employee Count: ");
-            int count = Integer.parseInt(input.next());
-            input.nextLine();
+            String person= (String) getUserInput("enter new Contact Person: " , "String");
+            String industry= (String) getUserInput("enter new Industry: ", "String");
+            String website= (String) getUserInput("enter new website: ", "String");
+            int count= (int) getUserInput("enter new Employee Count: " , "int");
 
             ((LegalClient) oldClient).setContactPerson(person);
             ((LegalClient) oldClient).setIndustry(industry);
@@ -105,15 +87,13 @@ public class Console {
         return oldClient;
     }
 
-    public ContactNumber getNumberDetailsFromUser (Scanner input){
-        System.out.println("enter number: \n");
-        String number= input.nextLine();
-        System.out.println("Enter number type: \n" +
-                            "W_Work,\n" +
-                            "H_Home,\n" +
-                            "B_Business,\n" +
-                            "P_Personal\n");
-        char choice= input.nextLine().toUpperCase().charAt(0);
+    public ContactNumber getNumberDetailsFromUser(){
+        String number= (String) getUserInput("enter number: ", "str");
+        char choice= (char) getUserInput("Enter number type: \n" +
+                                                    "W_Work,\n" +
+                                                    "H_Home,\n" +
+                                                    "B_Business,\n" +
+                                                    "P_Personal\n", "char");
         NumberType type;
         switch(choice){
             case 'W' -> type= NumberType.WORK;
@@ -124,62 +104,47 @@ public class Console {
         }
         return new ContactNumber(IdGeneratorService.generateUniqueNumberId(), number, type);
     }
-    public int getIdFromUser (Scanner input){
-        System.out.println("enter Id: \n");
-        int id = Integer.parseInt(input.nextLine());
+    public int getIdFromUser (){
+        int id= (int)getUserInput("enter Id: " , "int");
         return id;
     }
-    public Object getClientDetailForSelection(Scanner input){
-        System.out.println("How do you want to search for the client? \n" +
-                            "N.Name\n"+
-                            "I.Id\n");
-        char choice= input.nextLine().toUpperCase().charAt(0);
+    public Object getClientDetailForSelection(){
+        char choice=
+            (char)getUserInput("How do you want to search for the client? \n" +
+                                        "N.Name\n"+
+                                        "I.Id\n", "char");
         if(choice == 'N'){
-            System.out.println("enter name:");
-            String name= input.nextLine();
+            String name= (String)getUserInput("enter name:", "str");
             return name;
         }else if(choice == 'I'){
-            System.out.println("enter id: ");
-            int id= Integer.parseInt(input.nextLine());
+            int id= (int)getUserInput("enter id: ", "int");
             return id;
         }
         return null;
     }
-    public String getNewNumberToUpdate(Scanner input){
-        System.out.println("enter new number: \n");
-        return input.nextLine();
+    public String getNewNumberToUpdate(){
+       return (String) getUserInput("enter new number: \n", "str");
     }
-    private PersonalClient createPersonalClientFromInput (String name, String fiscalCode, String address, String email, List<ContactNumber> numbers, Scanner input) throws ParseException {
+    private PersonalClient createPersonalClientFromInput (String name, String fiscalCode, String address, String email, List<ContactNumber> numbers) throws ParseException {
         PersonalClient personalClient;
-        System.out.println("Enter surname: ");
-        String surname = input.nextLine();
-        System.out.println("Enter birthdate (dd-MM-yyyy): ");
-        String date = input.nextLine();
+        String surname = (String)getUserInput("Enter surname: ", "str");
+        String date = (String)getUserInput("Enter birthdate (dd-MM-yyyy): ", "str");
         Date birthdate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
-        System.out.println("Enter nationality: ");
-        String nationality = input.next();
+        String nationality = (String)getUserInput("Enter nationality: ","str");
         personalClient = new PersonalClient(IdGeneratorService.generateUniqueClientId(), name, surname,
                 birthdate, nationality, fiscalCode, email, address, numbers);
-        System.out.println("Personal client: " + personalClient.toString());
         System.out.println();
         return personalClient;
     }
-
-    private LegalClient createLegalClientFromInput(String name, String fiscalCode, String address, String email,  List<ContactNumber> numbers, Scanner input) throws ParseException {
+    private LegalClient createLegalClientFromInput(String name, String fiscalCode, String address, String email,  List<ContactNumber> numbers) throws ParseException {
         LegalClient newClient= null;
-        System.out.println("enter Contact Person: ");
-        String person = input.next();
-        System.out.println("enter Industry: ");
-        String industry = input.next();
-        System.out.println("enter Registration Number: ");
-        String registrationNumber = input.next();
-        System.out.println("enter Establishment Date (dd-MM-yyyy): ");
-        String date = input.next();
+        String person = (String) getUserInput("enter Contact Person: ", "str");
+        String industry = (String) getUserInput("enter Industry: ", "str");
+        String registrationNumber = (String) getUserInput("enter Registration Number: ", "str");
+        String date = (String) getUserInput("enter Establishment Date (dd-MM-yyyy): ", "str");
         Date estDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
-        System.out.println("enter Website: ");
-        String website = input.next();
-        System.out.println("enter Employee Count: ");
-        int count = Integer.parseInt(input.next());
+        String website = (String) getUserInput("enter Website: " , "str");
+        int count = (int) getUserInput("enter Employee Count: ","int");
         newClient = new LegalClient(IdGeneratorService.generateUniqueClientId(), name, person, industry, fiscalCode,
                 registrationNumber, estDate, email, website,
                 address, count, numbers);
@@ -187,8 +152,23 @@ public class Console {
         return newClient;
     }
 
+    private Object getUserInput(String message, String type) {
+        System.out.println(message);
+        Object userInput = null;
+        if (type.equalsIgnoreCase("str")) {
+            userInput= scanner.nextLine();
+        } else if (type.equalsIgnoreCase("int")) {
+            userInput= Integer.parseInt(scanner.nextLine());
+        } else if(type.equalsIgnoreCase("char")){
+            userInput= scanner.next().toUpperCase().charAt(0);
+        }
+        return userInput;
+    }
 
-
+    @Override
+    public void close() {
+            scanner.close();
+    }
 }//class level
 
 
