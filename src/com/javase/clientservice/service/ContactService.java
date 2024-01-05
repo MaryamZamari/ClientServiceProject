@@ -6,22 +6,25 @@ import com.javase.clientservice.model.ContactNumber;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class NumberService {
+public class ContactService {
     private static Client client;
-    public NumberService(Client client) {
+    public ContactService(Client client) {
         this.client = client;
     }
 
-    public NumberService() {
+    public ContactService() {
 
     }
 
     //the only field of number that can be set, is the digits themselves. the type can not be changed.
     public void updateNumber(int numberId, String newNumber){
         ContactNumber numberToSet= client.getNumberList()
-                .stream().filter(x -> x.getId()== numberId)
+                .stream()
+                .filter(x -> !x.getDeleted())
+                .filter(x -> x.getId()== numberId)
                 .findFirst()
-                .orElseThrow(()-> new NoSuchElementException("The client with the Id" + numberId + "does not exist!Try again!"));
+                .orElseThrow(()->
+                        new NoSuchElementException("The client with the Id" + numberId + "does not exist!Try again!"));
         int index= client.getNumberList().indexOf(numberToSet);
         numberToSet.setNumber(newNumber);
         client.getNumberList().set(index, numberToSet);
@@ -32,15 +35,19 @@ public class NumberService {
     public ContactNumber getNumberById(int numberId){
         Optional<ContactNumber> optionalNumber=
                 client.getNumberList().stream()
+                        .filter(x -> !x.getDeleted())
                         .filter(x -> x.getId() == numberId).findFirst();
-        return optionalNumber.orElseThrow(()-> new NoSuchElementException("there is no client with the Id " + numberId)) ;
+        return optionalNumber.orElseThrow(()->
+                new NoSuchElementException("there is no client with the Id " + numberId)) ;
     }
     public void deleteNumberById(int numberId){
         ContactNumber numberToDelete= getNumberById(numberId);
-        client.getNumberList().remove(numberToDelete);
+        numberToDelete.setDeleted(true);
     }
     public void printAllNumbers(){
-        client.getNumberList().stream().forEach(System.out::println);
+        client.getNumberList().stream()
+                .filter(x -> !x.getDeleted())
+                .forEach(System.out::println);
     }
 
 }

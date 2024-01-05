@@ -1,10 +1,10 @@
-package com.javase.clientservice.controller;
+package com.javase.clientservice.view;
 
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
 import com.javase.clientservice.service.ClientService;
-import com.javase.clientservice.service.NumberService;
-import com.javase.clientservice.view.Console;
+import com.javase.clientservice.service.ContactService;
+
 import java.text.ParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -17,10 +17,10 @@ import static java.lang.Integer.parseInt;
  *     the Service classes.
  *
  */
-public class ClientController {
-    private static NumberService numberService = new NumberService();
-    private static ClientService clientService= new ClientService();
-    private static Console view = new Console();
+public class ClientController{
+    private static final ContactService numberService = new ContactService();
+    private static final ClientService clientService= new ClientService();
+    private static final Console view = new Console();
 
     public ClientController(){
 
@@ -46,7 +46,9 @@ public class ClientController {
                         Client oldClient= clientService.getClientById(clientId);
                         Client updatedClient = view.getClientInfoFromUserForEdit(oldClient);
                         updateClient(clientId, updatedClient);
-                        System.out.println("If you need to update the numbers too, proceed with the Number Menu (6)!");
+                        System.out.println(
+                                "If you need to update the numbers too, " +
+                                        "proceed with the Number Menu (6)!");
                         break;
                     case 4:
                         clientId = view.getIdFromUser();

@@ -1,6 +1,5 @@
 package com.javase.clientservice.model;
 
-import com.javase.clientservice.service.IdGeneratorService;
 import java.util.Date;
 import java.util.List;
 
@@ -12,10 +11,11 @@ public class LegalClient extends Client{
     private String website;
     private int employeeCount;
 
-    public LegalClient(int id, String name, String contactPerson, String industry, String fiscalCode,
-                       String registrationNumber, Date establishmentDate,String email,String website,
-                       String address, int employeeCount, List<ContactNumber> numbers){
-        super(id, name, fiscalCode, email, address, numbers);
+    public LegalClient(int id, String name, String contactPerson, String industry,
+                       String fiscalCode, String registrationNumber, Date establishmentDate,
+                       String email, String website, String address, int employeeCount,
+                       List<ContactNumber> numbers, boolean deleted, String password){
+        super(id, name, fiscalCode, email, address, numbers, deleted, password);
         this.contactPerson= contactPerson;
         this.industry= industry;
         this.registrationNumber= registrationNumber;
@@ -68,12 +68,7 @@ public class LegalClient extends Client{
     @Override
     public String toString() {
         return "Client_LegalClient{" +
-                "id=" + super.getId() +
-                ", name='" + super.getName() + '\'' +
-                ", fiscalCode='" + super.getFiscalCode() + '\'' +
-                ", email='" + super.getEmail() + '\'' +
-                ", address='" + super.getAddress() + '\'' +
-                ", numberList=" + super.getNumberList() +
+                super.toString() +
                 ", contactPerson='" + contactPerson + '\'' +
                 ", industry='" + industry + '\'' +
                 ", registrationNumber='" + registrationNumber + '\'' +

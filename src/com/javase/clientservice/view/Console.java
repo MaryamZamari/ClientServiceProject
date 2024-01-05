@@ -1,7 +1,7 @@
 package com.javase.clientservice.view;
 
 import com.javase.clientservice.model.*;
-import com.javase.clientservice.service.IdGeneratorService;
+import com.javase.clientservice.utility.IdGeneratorUtil;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -40,6 +40,8 @@ public class Console implements AutoCloseable{
         String fiscalCode = (String) getUserInput("Enter FiscalCode: ", "str");
         String email = (String) getUserInput("Enter new Email: ", "str");
         String address = (String) getUserInput("Enter new Address: ", "str");
+        boolean deleted= false;
+        String passwordInput= (String) getUserInput("Enter password: ", "str");
 
         int n= (int) getUserInput("how many numbers do you want to add?", "int");
         List<ContactNumber> numbers = new ArrayList<>();
@@ -49,9 +51,13 @@ public class Console implements AutoCloseable{
         }
         char typeInput= (char)getUserInput("Enter P for Personal and L for Legal client: ", "char");
         if (typeInput == 'P') {
-              newClient= createPersonalClientFromInput(name, fiscalCode, address, email,numbers);
+              newClient=
+                      createPersonalClientFromInput(
+                              name, fiscalCode, address, email,numbers, deleted, passwordInput);
         } else if (typeInput == 'L') {
-               newClient= createLegalClientFromInput(name, fiscalCode, address, email, numbers);
+               newClient=
+                       createLegalClientFromInput(
+                               name, fiscalCode, address, email, numbers, deleted, passwordInput);
         }
         scanner.nextLine();
         return newClient;
@@ -86,7 +92,6 @@ public class Console implements AutoCloseable{
         }
         return oldClient;
     }
-
     public ContactNumber getNumberDetailsFromUser(){
         String number= (String) getUserInput("enter number: ", "str");
         char choice= (char) getUserInput("Enter number type: \n" +
@@ -102,7 +107,7 @@ public class Console implements AutoCloseable{
             case 'P' -> type= NumberType.PERSONAL;
             default  -> throw new NoSuchElementException("Invalid Type.Try again!");
         }
-        return new ContactNumber(IdGeneratorService.generateUniqueNumberId(), number, type);
+        return new ContactNumber(IdGeneratorUtil.generateUniqueNumberId(), number, type);
     }
     public int getIdFromUser (){
         int id= (int)getUserInput("enter Id: " , "int");
@@ -125,18 +130,26 @@ public class Console implements AutoCloseable{
     public String getNewNumberToUpdate(){
        return (String) getUserInput("enter new number: \n", "str");
     }
-    private PersonalClient createPersonalClientFromInput (String name, String fiscalCode, String address, String email, List<ContactNumber> numbers) throws ParseException {
+    private PersonalClient createPersonalClientFromInput(
+                    String name, String fiscalCode, String address,
+                    String email, List<ContactNumber> numbers,
+                    boolean deleted, String password) throws ParseException {
+        scanner.nextLine();
         PersonalClient personalClient;
         String surname = (String)getUserInput("Enter surname: ", "str");
         String date = (String)getUserInput("Enter birthdate (dd-MM-yyyy): ", "str");
         Date birthdate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
         String nationality = (String)getUserInput("Enter nationality: ","str");
-        personalClient = new PersonalClient(IdGeneratorService.generateUniqueClientId(), name, surname,
-                birthdate, nationality, fiscalCode, email, address, numbers);
+        scanner.nextLine();
+        personalClient = new PersonalClient(IdGeneratorUtil.generateUniqueClientId(), name, surname,
+                birthdate, nationality, fiscalCode, email, address, numbers, deleted, password);
         System.out.println();
         return personalClient;
     }
-    private LegalClient createLegalClientFromInput(String name, String fiscalCode, String address, String email,  List<ContactNumber> numbers) throws ParseException {
+    private LegalClient createLegalClientFromInput(
+                    String name, String fiscalCode, String address,
+                    String email,  List<ContactNumber> numbers,
+                    boolean deleted, String password) throws ParseException {
         LegalClient newClient= null;
         String person = (String) getUserInput("enter Contact Person: ", "str");
         String industry = (String) getUserInput("enter Industry: ", "str");
@@ -145,9 +158,9 @@ public class Console implements AutoCloseable{
         Date estDate = new SimpleDateFormat("dd-MM-yyyy").parse(date);
         String website = (String) getUserInput("enter Website: " , "str");
         int count = (int) getUserInput("enter Employee Count: ","int");
-        newClient = new LegalClient(IdGeneratorService.generateUniqueClientId(), name, person, industry, fiscalCode,
-                registrationNumber, estDate, email, website,
-                address, count, numbers);
+        newClient = new LegalClient(IdGeneratorUtil.generateUniqueClientId(), name, person, industry, fiscalCode,
+                                    registrationNumber, estDate, email, website,
+                                    address, count, numbers, deleted, password);
         System.out.println();
         return newClient;
     }
@@ -169,6 +182,6 @@ public class Console implements AutoCloseable{
     public void close() {
             scanner.close();
     }
-}//class level
+}
 
 
