@@ -4,10 +4,8 @@ import com.javase.clientservice.view.ClientController;
 
 public class ApplicationRunner {
     private static final ClientController controller= new ClientController();
-    public static void main(String[] args) {
+    public static void main(String[] args){
             controller.run();
-
-            //TODO: Password, Export User Details and Logging.
         }
 
 }

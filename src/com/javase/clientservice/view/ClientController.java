@@ -4,7 +4,12 @@ import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
 import com.javase.clientservice.service.ClientService;
 import com.javase.clientservice.service.ContactService;
+import com.javase.clientservice.service.exception.CustomerBaseException;
+import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.view.component.AbstractCustomerUI;
+import com.javase.clientservice.view.component.Console;
 
+import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
@@ -21,6 +26,7 @@ public class ClientController{
     private static final ContactService numberService = new ContactService();
     private static final ClientService clientService= new ClientService();
     private static final Console view = new Console();
+    private static AbstractCustomerUI view1;
 
     public ClientController(){
 
@@ -38,8 +44,13 @@ public class ClientController{
                         addClient(newClient);
                         break;
                     case 2:
-                        Object clientDetailToSearch= view.getClientDetailForSelection();
-                        Client client= searchClient(clientDetailToSearch);
+                        Object clientDetailToSearch= null;
+                        try{
+                            clientDetailToSearch= view.getClientDetailForSelection();}
+                        catch(InvalidParameterException exception){
+                            System.out.println("you typed the wrong characters. revise your choice to select the client!");
+                             }
+                        searchClient(clientDetailToSearch);
                         break;
                     case 3:
                         int clientId= view.getIdFromUser();
@@ -101,12 +112,19 @@ public class ClientController{
             System.out.println("Error: " + ex.getMessage());
         }catch(InputMismatchException ex){
             System.out.println("invalid input.please enter a valid output");
+        } catch (DuplicateClientException e) {
+            throw new RuntimeException(e);
         }
     }
 
 
-    public void addClient(Client client){
-        clientService.addClient(client);
+    public void addClient(Client client) throws DuplicateClientException {
+        try {
+            clientService.addClient(client);
+        }catch(DuplicateClientException exception){
+            System.out.println("it is not possible to add a duplicate customer! check surname or business person name!");
+            clientService.addClient(client);
+        }
     }
     public static Client searchClient(Object clientDetailToSearch) {
         return clientService.getClient(clientDetailToSearch);

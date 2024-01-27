@@ -1,6 +1,9 @@
 package com.javase.clientservice.service;
 
 import com.javase.clientservice.model.Client;
+import com.javase.clientservice.model.LegalClient;
+import com.javase.clientservice.model.PersonalClient;
+import com.javase.clientservice.service.exception.DuplicateClientException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +36,22 @@ public class ClientService {
         return clientList;
     }
 
-    public static void setClientList(List<Client> clientList) {
-        ClientService.clientList = clientList;
+     public ClientService() {
     }
+    public void addClient(Client client) throws DuplicateClientException {
+        Optional<Client> duplicateClient =clientList.stream()
+                                            .filter(x -> x.getName().equals(client.getName()) &&
+                                                    ((client instanceof PersonalClient &&
+                                                            ((PersonalClient)x).getSurname()
+                                                                    .equals(((PersonalClient) client).getSurname())) ||
+                                                     (client instanceof LegalClient &&
+                                                                    ((LegalClient)x).getContactPerson()
+                                                                            .equals(((LegalClient) client).getContactPerson()))))
+                                                            .findFirst();
+        if(duplicateClient.isPresent()){
+            throw new DuplicateClientException("it is not possible to add duplicate client! check again the name and surname or name and contact person's name!");
 
-    public ClientService() {
-    }
-    public void addClient(Client client){
+        }
         clientList.add(client);
         System.out.println("Client was added successfully. Client details: "
                             + client.toString());
@@ -62,8 +74,6 @@ public class ClientService {
         return client.findFirst().orElseThrow(()->
                 new NoSuchElementException("there is no client with the Id " + clientId));
             }
-
-
 
     public Client getClientByName(String clientName){
         Optional<Client> optionalClient=
@@ -88,7 +98,7 @@ public class ClientService {
     }
     public void deleteClientById(int cliendId){
         Client clientToDelete= getClientById(cliendId);
-        clientToDelete.setDeleted(true); //TODO : take all the sysouts to the console part. here only business logic
+        clientToDelete.setDeleted(true);
         System.out.println("Client removed successfully! The updated list is: "
                 + getClientList().toString());
     }

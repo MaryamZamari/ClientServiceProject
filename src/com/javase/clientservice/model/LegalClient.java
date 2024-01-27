@@ -11,11 +11,11 @@ public class LegalClient extends Client{
     private String website;
     private int employeeCount;
 
-    public LegalClient(int id, String name, String contactPerson, String industry,
+    public LegalClient(int id, ClientType type, String name, String contactPerson, String industry,
                        String fiscalCode, String registrationNumber, Date establishmentDate,
                        String email, String website, String address, int employeeCount,
                        List<ContactNumber> numbers, boolean deleted, String password){
-        super(id, name, fiscalCode, email, address, numbers, deleted, password);
+        super(id, type, name, fiscalCode, email, address, numbers, deleted, password);
         this.contactPerson= contactPerson;
         this.industry= industry;
         this.registrationNumber= registrationNumber;
@@ -23,7 +23,6 @@ public class LegalClient extends Client{
         this.website= website;
         this.employeeCount= employeeCount;
     }
-
 
     public String getContactPerson() {
         return contactPerson;

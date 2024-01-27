@@ -7,17 +7,15 @@ public class PersonalClient extends Client{
     private String surname;
     private Date birthday;
     private String nationality;
-
     public PersonalClient(int id, String name, String surname, Date birthday,
                           String nationality, String fiscalCode, String email,
-                          String address, List<ContactNumber> numbers,
+                          String address, ClientType type, List<ContactNumber> numbers,
                           boolean deleted, String password) {
-        super(id, name, fiscalCode, email, address, numbers, deleted, password);
+        super(id, name, fiscalCode, email, address, type,  numbers, deleted, password);
         this.surname= capitaliseFirstLetter(surname);
         this.birthday= birthday;
         this.nationality= nationality;
     }
-
 
     public String getSurname() {
         return surname;
