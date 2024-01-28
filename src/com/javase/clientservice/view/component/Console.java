@@ -46,6 +46,7 @@ public class Console{
         char clientType= scannerWrapper.getUserInput("what type of client? " +
                                                                 "P: Personal,  " +
                                                                 "B: Business. ", x -> x.toUpperCase().charAt(0));
+        scannerWrapper.clearExcessiveInput();
         ClientType type = switch(clientType){
             case 'P' -> ClientType.P;
             case 'B' -> ClientType.B;
@@ -78,6 +79,7 @@ public class Console{
             scannerWrapper.getUserInput("How do you want to search for the client? \n" +
                                         "N.Name\n"+
                                         "I.Id\n", x -> x.charAt(0));
+        scannerWrapper.clearExcessiveInput();
         if(choice == 'N'){
             String name= scannerWrapper.getUserInput("enter name:", Function.identity());
             return name;
@@ -87,6 +89,7 @@ public class Console{
         }else{
             throw new InvalidParameterException();
         }
+
     }
     public String getNewNumberToUpdate(){
        return scannerWrapper.getUserInput("enter new number: \n", Function.identity());

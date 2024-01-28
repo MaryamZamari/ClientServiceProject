@@ -4,11 +4,11 @@ import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
 import com.javase.clientservice.service.ClientService;
 import com.javase.clientservice.service.ContactService;
-import com.javase.clientservice.service.exception.CustomerBaseException;
+import com.javase.clientservice.service.IClientService;
 import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.service.exception.ValidationException;
 import com.javase.clientservice.view.component.AbstractCustomerUI;
 import com.javase.clientservice.view.component.Console;
-
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.InputMismatchException;
@@ -24,13 +24,10 @@ import static java.lang.Integer.parseInt;
  */
 public class ClientController{
     private static final ContactService numberService = new ContactService();
-    private static final ClientService clientService= new ClientService();
+    private static final IClientService clientService= ClientService.getInstance();
     private static final Console view = new Console();
     private static AbstractCustomerUI view1;
 
-    public ClientController(){
-
-    }
     public void run(){
         try(Scanner input= new Scanner(System.in)){
             int choice = 0;
@@ -113,12 +110,14 @@ public class ClientController{
         }catch(InputMismatchException ex){
             System.out.println("invalid input.please enter a valid output");
         } catch (DuplicateClientException e) {
-            throw new RuntimeException(e);
+           e.getMessage();
+        } catch (ValidationException e) {
+            System.out.println(e.getMessage());
         }
     }
 
 
-    public void addClient(Client client) throws DuplicateClientException {
+    public void addClient(Client client) throws DuplicateClientException, ValidationException {
         try {
             clientService.addClient(client);
         }catch(DuplicateClientException exception){

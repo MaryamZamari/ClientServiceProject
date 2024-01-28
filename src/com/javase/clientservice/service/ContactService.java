@@ -2,11 +2,10 @@ package com.javase.clientservice.service;
 
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
-
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-public class ContactService {
+public class ContactService implements IContactService{
     private static Client client;
     public ContactService(Client client) {
         this.client = client;

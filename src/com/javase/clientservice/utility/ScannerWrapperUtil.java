@@ -23,13 +23,15 @@ public class ScannerWrapperUtil implements AutoCloseable{
         try {
             input = converter.apply(scanner.nextLine());
         } catch (Exception ex) {
-            System.out.println();
             input= getUserInput(message, converter);
         }
         return input;
     }
 
 
+    public void clearExcessiveInput(){
+        scanner.nextLine();
+            }
     @Override
     public void close(){
         scanner.close();
