@@ -111,6 +111,7 @@ public class ClientController{
             System.out.println("invalid input.please enter a valid output");
         } catch (DuplicateClientException e) {
            e.getMessage();
+
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
         }
@@ -122,6 +123,9 @@ public class ClientController{
             clientService.addClient(client);
         }catch(DuplicateClientException exception){
             System.out.println("it is not possible to add a duplicate customer! check surname or business person name!");
+            clientService.addClient(client);
+        }catch(ValidationException e){
+            System.out.println(e.getMessage());
             clientService.addClient(client);
         }
     }

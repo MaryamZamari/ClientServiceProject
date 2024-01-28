@@ -5,10 +5,7 @@ import com.javase.clientservice.model.LegalClient;
 import com.javase.clientservice.model.PersonalClient;
 import com.javase.clientservice.service.exception.DuplicateClientException;
 import com.javase.clientservice.service.exception.ValidationException;
-import com.javase.clientservice.service.validation.ClientValidation;
-import com.javase.clientservice.service.validation.IValidation;
-import com.javase.clientservice.service.validation.LegalClientValidation;
-import com.javase.clientservice.service.validation.PersonalClientValidation;
+import com.javase.clientservice.service.validation.*;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -17,8 +14,7 @@ import java.util.stream.Stream;
 public class ClientService implements IClientService {
     private static final ClientService INSTANCE;
     private static List<Client> clientList = new ArrayList<>();
-    private List<IValidation> validations;
-
+    private ValidationContext<Client> validationContext= new ClientValidationContext();
     static {
         INSTANCE = new ClientService();
     }
@@ -46,14 +42,6 @@ public class ClientService implements IClientService {
     public static List<Client> getClientList() {
         return clientList;
     }
-    private ClientService(){
-        this.validations= Arrays.asList(
-                                new ClientValidation(),
-                                new LegalClientValidation(),
-                                new PersonalClientValidation()
-        );
-    }
-
     public void addClient(Client client) throws DuplicateClientException, ValidationException {
         Optional<Client> duplicateClient = clientList.stream().filter(isDuplicate(client)).findFirst();
         if (duplicateClient.isPresent()) {
@@ -62,16 +50,8 @@ public class ClientService implements IClientService {
         }
         ClientValidation clientValidation= new ClientValidation();
         clientValidation.validate(client);
-       /* if(client instanceof PersonalClient){
-            IValidation personalValidation= new PersonalClientValidation();
-            personalValidation.validate(client);
-        }else if(client instanceof LegalClient){
-            IValidation legalValidation= new LegalClientValidation();
-            legalValidation.validate(client);
-        }*/
-        for (IValidation validation : validations) {
-            validation.validate(client);
-        }
+
+        validationContext.validate(client);
         clientList.add(client);
         System.out.println("Client was added successfully. Client details: " + client.toString());
     }
