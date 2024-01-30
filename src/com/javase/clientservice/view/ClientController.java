@@ -1,10 +1,14 @@
 package com.javase.clientservice.view;
 
+import com.javase.clientservice.dto.ClientDto;
+import com.javase.clientservice.dto.ContactNumberDto;
+import com.javase.clientservice.facade.ClientFacade;
+import com.javase.clientservice.facade.ContactFacade;
+import com.javase.clientservice.facade.IClientFacade;
+import com.javase.clientservice.facade.IContactFacade;
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
-import com.javase.clientservice.service.ClientService;
 import com.javase.clientservice.service.ContactService;
-import com.javase.clientservice.service.IClientService;
 import com.javase.clientservice.service.exception.DuplicateClientException;
 import com.javase.clientservice.service.exception.ValidationException;
 import com.javase.clientservice.view.component.AbstractCustomerUI;
@@ -23,8 +27,8 @@ import static java.lang.Integer.parseInt;
  *
  */
 public class ClientController{
-    private static final ContactService numberService = new ContactService();
-    private static final IClientService clientService= ClientService.getInstance();
+    private static final IContactFacade numberService = ContactFacade.getinstance();
+    private static final IClientFacade clientFacade= ClientFacade.getInstance();
     private static final Console view = new Console();
     private static AbstractCustomerUI view1;
 
@@ -37,7 +41,7 @@ public class ClientController{
                 choice= parseInt(input.nextLine());
                 switch(choice){
                     case 1:
-                        Client newClient= view.getClientDetailsFromUser();
+                        ClientDto newClient= view.getClientDetailsFromUser();
                         addClient(newClient);
                         break;
                     case 2:
@@ -49,10 +53,10 @@ public class ClientController{
                              }
                         searchClient(clientDetailToSearch);
                         break;
-                    case 3:
+                    case 3:   //TODO: isn't it incorrect to get the client by Id from user? how would the client know the ID?
                         int clientId= view.getIdFromUser();
-                        Client oldClient= clientService.getClientById(clientId);
-                        Client updatedClient = view.getClientInfoFromUserForEdit(oldClient);
+                        ClientDto oldClient= clientFacade.getClientById(clientId);
+                        ClientDto updatedClient = view.getClientInfoFromUserForEdit(oldClient);
                         updateClient(clientId, updatedClient);
                         System.out.println(
                                 "If you need to update the numbers too, " +
@@ -73,7 +77,7 @@ public class ClientController{
                         do{
                             switch(numberChoice){
                                 case 'A':
-                                    ContactNumber newNumber= view.getNumberDetailsFromUser();
+                                    ContactNumberDto newNumber= view.getNumberDetailsFromUser();
                                     addNumber(newNumber);
                                     break;
                                 case 'B':
@@ -118,32 +122,32 @@ public class ClientController{
     }
 
 
-    public void addClient(Client client) throws DuplicateClientException, ValidationException {
+    public void addClient(ClientDto client) throws DuplicateClientException, ValidationException {
         try {
-            clientService.addClient(client);
+            clientFacade.addClient(client);
         }catch(DuplicateClientException exception){
             System.out.println("it is not possible to add a duplicate customer! check surname or business person name!");
-            clientService.addClient(client);
+            clientFacade.addClient(client);
         }catch(ValidationException e){
             System.out.println(e.getMessage());
-            clientService.addClient(client);
+            clientFacade.addClient(client);
         }
     }
-    public static Client searchClient(Object clientDetailToSearch) {
-        return clientService.getClient(clientDetailToSearch);
+    public static ClientDto searchClient(Object clientDetailToSearch) {
+        return clientFacade.getClient(clientDetailToSearch);
     }
 
     public void deleteClient(int id){
-        clientService.deleteClientById(id);
+        clientFacade.deleteClientById(id);
     }
 
-    public void updateClient(int id, Client newClient){
-        clientService.updateClient(id, newClient);
+    public void updateClient(int id, ClientDto newClient) throws ValidationException {
+        clientFacade.updateClient(id, newClient);
     }
     public void printAllClients(){
-        clientService.printAllClients();
+        clientFacade.printAllClients();
     }
-    public void addNumber(ContactNumber newNumber) {
+    public void addNumber(ContactNumberDto newNumber) {
         numberService.addNumber(newNumber);
     }
 
@@ -153,10 +157,10 @@ public class ClientController{
 
     public void deleteNumber(int id) {
         numberService.deleteNumberById(id);
-    }
+    }  //TODO: create facade for number too.
 
     public void printAllNumbersOfClient(int clientId){
-        clientService.printAllNumbersOfClient(clientId);
+        clientFacade.printAllNumbersOfClient(clientId);
     }
 
 

@@ -1,11 +1,11 @@
 package com.javase.clientservice.service;
 
+import com.javase.clientservice.dto.ClientDto;
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.LegalClient;
 import com.javase.clientservice.model.PersonalClient;
 import com.javase.clientservice.service.exception.DuplicateClientException;
 import com.javase.clientservice.service.exception.ValidationException;
-import com.javase.clientservice.service.validation.*;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -14,7 +14,6 @@ import java.util.stream.Stream;
 public class ClientService implements IClientService {
     private static final ClientService INSTANCE;
     private static List<Client> clientList = new ArrayList<>();
-    private ValidationContext<Client> validationContext= new ClientValidationContext();
     static {
         INSTANCE = new ClientService();
     }
@@ -24,7 +23,7 @@ public class ClientService implements IClientService {
 
     /*
      Singleton Lazy initialization
-     public static ClientService getInstance(List<Client> clientList) {
+     public static ClientService getInstance(List<ClientDto> clientList) {
 
          if(instance == null){
              synchronized(ClientService.class){
@@ -48,12 +47,9 @@ public class ClientService implements IClientService {
             throw new DuplicateClientException("it is not possible to add duplicate client! " +
                     "                           check again the name and surname or name and contact person's name!");
         }
-        ClientValidation clientValidation= new ClientValidation();
-        clientValidation.validate(client);
 
-        validationContext.validate(client);
         clientList.add(client);
-        System.out.println("Client was added successfully. Client details: " + client.toString());
+        System.out.println("ClientDto was added successfully. ClientDto details: " + client.toString());
     }
 
 
@@ -93,8 +89,11 @@ public class ClientService implements IClientService {
         return optionalClient.orElseThrow(() -> new NoSuchElementException("there is no client with the Name " + clientName));
     }
 
-    public void updateClient(int clientId, Client newClient) {
-        Client c = getClientList().stream().filter((x) -> x.getDeleted() == false).filter(x -> x.getId() == clientId).findFirst().orElseThrow(() -> new NoSuchElementException("The client with the Id" + clientId + "does not exist!Try again!"));
+    public void updateClientList(int clientId, Client newClient) {
+        Client c = getClientList().stream()
+                        .filter((x) -> x.getDeleted() == false)
+                        .filter(x -> x.getId() == clientId)
+                        .findFirst().orElseThrow(() -> new NoSuchElementException("The client with the Id" + clientId + "does not exist!Try again!"));
         int index = getClientList().indexOf(c);
         getClientList().set(index, newClient);
         System.out.println("Modification was done! The updated client is: " + c.toString());
@@ -103,7 +102,7 @@ public class ClientService implements IClientService {
     public void deleteClientById(int cliendId) {
         Client clientToDelete = getClientById(cliendId);
         clientToDelete.setDeleted(true);
-        System.out.println("Client removed successfully! The updated list is: " + getClientList().toString());
+        System.out.println("ClientDto removed successfully! The updated list is: " + getClientList().toString());
     }
 
     public void printAllNumbersOfClient(int cliendId) {
@@ -113,6 +112,11 @@ public class ClientService implements IClientService {
 
     public void printAllClients() {
         getClientList().stream().filter(x -> !x.getDeleted()).forEach(System.out::println);
+    }
+
+    @Override
+    public void updateClient(int id, ClientDto client) {
+
     }
 
 }

@@ -1,8 +1,8 @@
-package com.javase.clientservice.service.validation;
+package com.javase.clientservice.facade.validation;
 
-import com.javase.clientservice.model.Client;
+import com.javase.clientservice.dto.ClientDto;
 
-public class ClientValidationContext extends ValidationContext<Client>{
+public class ClientValidationContext extends ValidationContext<ClientDto>{
     public ClientValidationContext(){
         addValidationItem(new ClientValidation());
         addValidationItem(new PersonalClientValidation());

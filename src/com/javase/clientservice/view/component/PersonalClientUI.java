@@ -1,8 +1,10 @@
 package com.javase.clientservice.view.component;
 
+import com.javase.clientservice.dto.ClientDto;
+import com.javase.clientservice.dto.ContactNumberDto;
+import com.javase.clientservice.dto.PersonalClientDto;
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ClientType;
-import com.javase.clientservice.model.ContactNumber;
 import com.javase.clientservice.model.PersonalClient;
 import com.javase.clientservice.utility.ScannerWrapperUtil;
 import java.text.ParseException;
@@ -16,17 +18,17 @@ public class PersonalClientUI extends AbstractCustomerUI {
         super(scannerWrapper);
     }
     @Override
-    public void editClient(Client oldClient) {
+    public void editClient(ClientDto oldClient) {
         String surname= scannerWrapper.getUserInput("Enter new surname: " , Function.identity());
         String nationality= scannerWrapper.getUserInput("Enter new nationality: " , Function.identity());
 
-        ((PersonalClient) oldClient).setSurname(surname);
-        ((PersonalClient) oldClient).setNationality(nationality);
+        ((PersonalClientDto) oldClient).setSurname(surname);
+        ((PersonalClientDto) oldClient).setNationality(nationality);
     }
 
     @Override
-    protected Client additionalGenerateClient(int id, String name, String fiscalCode, String email, String address, boolean deleted,
-                                              String passwordInput, ClientType type, List<ContactNumber> numbers) {
+    protected ClientDto additionalGenerateClient(Integer id, String name, String fiscalCode, String email, String address, boolean deleted,
+                                                 String passwordInput, ClientType type, List<ContactNumberDto> numbers) {
         String surname = null;
         String date = null;
         Date birthdate = null;
@@ -39,7 +41,7 @@ public class PersonalClientUI extends AbstractCustomerUI {
         }catch(ParseException exception){
             exception.printStackTrace();
         }
-        Client personalClient= new PersonalClient(id ,name , surname, birthdate, nationality, fiscalCode, email,address,type, numbers,deleted, passwordInput);
+        ClientDto personalClient= new PersonalClientDto(null ,name , surname, birthdate, nationality, fiscalCode, email,address,type, numbers, passwordInput);
         return personalClient;
     }
 

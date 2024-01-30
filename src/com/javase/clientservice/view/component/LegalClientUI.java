@@ -1,12 +1,10 @@
 package com.javase.clientservice.view.component;
 
-import com.javase.clientservice.model.Client;
+import com.javase.clientservice.dto.ClientDto;
+import com.javase.clientservice.dto.ContactNumberDto;
+import com.javase.clientservice.dto.LegalClientDto;
 import com.javase.clientservice.model.ClientType;
-import com.javase.clientservice.model.ContactNumber;
-import com.javase.clientservice.model.LegalClient;
 import com.javase.clientservice.utility.ScannerWrapperUtil;
-import com.javase.clientservice.view.component.AbstractCustomerUI;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -19,21 +17,21 @@ public class LegalClientUI extends AbstractCustomerUI {
     }
 
     @Override
-    public void editClient(Client oldClient) {
+    public void editClient(ClientDto oldClient) {
         String person= scannerWrapper.getUserInput("enter new Contact Person: " , Function.identity());
         String industry= scannerWrapper.getUserInput("enter new Industry: ", Function.identity());
         String website= scannerWrapper.getUserInput("enter new website: ", Function.identity());
         int count= scannerWrapper.getUserInput("enter new Employee Count: " , Integer::valueOf);
 
-        ((LegalClient) oldClient).setContactPerson(person);
-        ((LegalClient) oldClient).setIndustry(industry);
-        ((LegalClient) oldClient).setWebsite(website);
-        ((LegalClient) oldClient).setEmployeeCount(count);
+        ((LegalClientDto) oldClient).setContactPerson(person);
+        ((LegalClientDto) oldClient).setIndustry(industry);
+        ((LegalClientDto) oldClient).setWebsite(website);
+        ((LegalClientDto) oldClient).setEmployeeCount(count);    //TODO: check this thing later. should u send a part of the logic in service?
     }
 
     @Override
-    protected Client additionalGenerateClient(int id, String name, String fiscalCode, String email, String address,
-                                              boolean deleted, String passwordInput, ClientType type, List<ContactNumber> numbers) {
+    protected ClientDto additionalGenerateClient(Integer id, String name, String fiscalCode, String email, String address,
+                                                 boolean deleted, String passwordInput, ClientType type, List<ContactNumberDto> numbers) {
         String person = null;
         String industry = null;
         String registrationNumber = null;
@@ -52,9 +50,9 @@ public class LegalClientUI extends AbstractCustomerUI {
         }catch(ParseException exception){
             exception.printStackTrace();
         }
-        Client legalClient= new LegalClient(id, type, name, person, industry, fiscalCode, registrationNumber,
-                                            estDate, email, website, address, count, numbers, deleted, passwordInput);
-        return legalClient;
+        ClientDto legalClientDto= new LegalClientDto(null , type, name, person, industry, fiscalCode, registrationNumber,
+                                            estDate, email, website, address, count, numbers, passwordInput); //TODO: deleted will be added in the service not here
+        return legalClientDto;
     }
 
 

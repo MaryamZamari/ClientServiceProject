@@ -1,11 +1,11 @@
-package com.javase.clientservice.service.validation;
+package com.javase.clientservice.facade.validation;
 
-import com.javase.clientservice.model.ContactNumber;
+import com.javase.clientservice.dto.ContactNumberDto;
 import com.javase.clientservice.service.exception.ValidationException;
 
-public class NumberValidation implements IValidation<ContactNumber>{
+public class NumberValidation implements IValidation<ContactNumberDto>{
     @Override //TODO: implement it in the numberService.
-    public void validate(ContactNumber contact) throws ValidationException {
+    public void validate(ContactNumberDto contact) throws ValidationException {
         String number = contact.getNumber();
         if(number == null || number.trim().isEmpty()){
             throw new ValidationException("Number can not be empty or null!");

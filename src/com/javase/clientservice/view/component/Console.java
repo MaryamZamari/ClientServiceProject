@@ -1,9 +1,12 @@
 package com.javase.clientservice.view.component;
 
+import com.javase.clientservice.dto.ClientDto;
+import com.javase.clientservice.dto.ContactNumberDto;
+import com.javase.clientservice.facade.ClientFacade;
 import com.javase.clientservice.model.*;
+import com.javase.clientservice.service.exception.ValidationException;
 import com.javase.clientservice.utility.IdGeneratorUtil;
 import com.javase.clientservice.utility.ScannerWrapperUtil;
-
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.function.Function;
@@ -12,13 +15,14 @@ public class Console{
 
     //menu + get details from user for various operations needed in the service classes.
     private final ScannerWrapperUtil scannerWrapper;
+    private final ClientFacade clientFacade= ClientFacade.getInstance();
     public Console(){
         scannerWrapper= ScannerWrapperUtil.getInstance();
     }
 
     public void printMenu() {
         System.out.println();
-        System.out.println("Welcome to Client Management Portal! \n" +
+        System.out.println("Welcome to ClientDto Management Portal! \n" +
                 "--- select a menu item: --- \n" +
                 "0.Exit\n" +
                 "1.Add a new client.\n" +
@@ -40,8 +44,8 @@ public class Console{
         );
     }
 
-    public Client getClientDetailsFromUser() throws ParseException {
-        Client newClient = null;
+    public ClientDto getClientDetailsFromUser() throws ParseException {
+        ClientDto newClient = null;
         AbstractCustomerUI customerUI = null;
         char clientType= scannerWrapper.getUserInput("what type of client? " +
                                                                 "P: Personal,  " +
@@ -56,7 +60,7 @@ public class Console{
         return newClient;
     }
 
-    public Client getClientInfoFromUserForEdit(Client oldClient){
+    public ClientDto getClientInfoFromUserForEdit(ClientDto oldClient) throws ValidationException {
         String name= scannerWrapper.getUserInput("Enter new Name: " , Function.identity());
         String email= scannerWrapper.getUserInput("Enter new Email: ", Function.identity());
         String address= scannerWrapper.getUserInput("Enter new Address: ", Function.identity());
@@ -67,6 +71,7 @@ public class Console{
         AbstractCustomerUI
                     .createCustomerUI(oldClient.getType())
                     .editClient(oldClient);
+        clientFacade.updateClient(oldClient.getId(), oldClient);
         return oldClient;
     }
 
@@ -94,9 +99,9 @@ public class Console{
     public String getNewNumberToUpdate(){
        return scannerWrapper.getUserInput("enter new number: \n", Function.identity());
     }
-    public ContactNumber getNumberDetailsFromUser(){
+    public ContactNumberDto getNumberDetailsFromUser(){
         String number= scannerWrapper.getUserInput("enter number: ", Function.identity());
-        return new ContactNumber(IdGeneratorUtil.generateUniqueNumberId(), number);
+        return new ContactNumberDto(null , number);  //TODO: IDs dont get generated here. we will generate later on.
     }
 
 

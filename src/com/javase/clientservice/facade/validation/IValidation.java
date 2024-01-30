@@ -1,4 +1,4 @@
-package com.javase.clientservice.service.validation;
+package com.javase.clientservice.facade.validation;
 
 import com.javase.clientservice.service.exception.ValidationException;
 @FunctionalInterface

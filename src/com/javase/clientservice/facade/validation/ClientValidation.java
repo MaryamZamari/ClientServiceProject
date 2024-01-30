@@ -1,11 +1,11 @@
-package com.javase.clientservice.service.validation;
+package com.javase.clientservice.facade.validation;
 
-import com.javase.clientservice.model.Client;
+import com.javase.clientservice.dto.ClientDto;
 import com.javase.clientservice.service.exception.ValidationException;
 
-public class ClientValidation implements IValidation<Client> {
+public class ClientValidation implements IValidation<ClientDto> {
     @Override
-    public void validate(Client client) throws ValidationException{
+    public void validate(ClientDto client) throws ValidationException{
         String name= client.getName();
         boolean hasEmptyName= name == null || name.trim().isEmpty();
         if(hasEmptyName){

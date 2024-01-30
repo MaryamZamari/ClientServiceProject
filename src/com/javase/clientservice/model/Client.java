@@ -81,7 +81,7 @@ public abstract class Client {
     public List<ContactNumber> getNumberList() {
         return numbers;
     }
-    public String getPassword(String passwordInput) {
+    public String getPassword() {
         return password;
     }
     public void setPassword(String password) {
@@ -101,7 +101,7 @@ public abstract class Client {
                 ", fiscalCode='" + fiscalCode + '\'' +
                 ", email='" + email + '\'' +
                 ", address='" + address + '\'' +
-                ", Client type='" + type + '\'' +
+                ", ClientDto type='" + type + '\'' +
                 ", numberList=" + numbers +
                 ", deleted=" + deleted +
                 ", password=" + password +
