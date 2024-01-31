@@ -1,18 +1,20 @@
 package com.javase.clientservice.service;
 
-import com.javase.clientservice.dto.ClientDto;
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.LegalClient;
 import com.javase.clientservice.model.PersonalClient;
 import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.service.exception.FileException;
 import com.javase.clientservice.service.exception.ValidationException;
 
+import java.io.*;
 import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class ClientService implements IClientService {
     private static final ClientService INSTANCE;
+    private final String fileName= "customerData.crm";
     private static List<Client> clientList = new ArrayList<>();
     static {
         INSTANCE = new ClientService();
@@ -47,13 +49,9 @@ public class ClientService implements IClientService {
             throw new DuplicateClientException("it is not possible to add duplicate client! " +
                     "                           check again the name and surname or name and contact person's name!");
         }
-
         clientList.add(client);
         System.out.println("ClientDto was added successfully. ClientDto details: " + client.toString());
     }
-
-
-
     private static Predicate<Client> isDuplicate(Client client) {
         return x -> x.getName().equals(client.getName()) &&
                 (isPersonalDuplicate(client, (PersonalClient) x) ||
@@ -115,7 +113,34 @@ public class ClientService implements IClientService {
     }
 
     @Override
-    public void updateClient(int id, ClientDto client) {
+    public void saveData() throws FileException {
+        try{
+            File file= new File(fileName);
+            if(!file.exists()){
+                file.createNewFile();
+            }
+            try(FileOutputStream fileOutputStream = new FileOutputStream(file);
+            ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);){
+                objectOutputStream.writeObject(clientList);
+            }
+        }catch(IOException exception){
+            throw new FileException();
+        }
+    }
+
+    @Override
+    public void loadData() throws FileNotFoundException {
+        try(FileInputStream fileInputStream = new FileInputStream(fileName)){
+            ObjectInputStream objectInputStream= new ObjectInputStream(fileInputStream);
+            clientList= (List<Client>) objectInputStream.readObject();
+        } catch (FileNotFoundException exception){
+            throw new FileNotFoundException();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 

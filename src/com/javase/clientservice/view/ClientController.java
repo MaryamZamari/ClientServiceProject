@@ -10,9 +10,12 @@ import com.javase.clientservice.model.Client;
 import com.javase.clientservice.model.ContactNumber;
 import com.javase.clientservice.service.ContactService;
 import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.service.exception.FileException;
 import com.javase.clientservice.service.exception.ValidationException;
 import com.javase.clientservice.view.component.AbstractCustomerUI;
 import com.javase.clientservice.view.component.Console;
+
+import java.io.FileNotFoundException;
 import java.security.InvalidParameterException;
 import java.text.ParseException;
 import java.util.InputMismatchException;
@@ -99,6 +102,12 @@ public class ClientController{
                             }
                         }while(numberChoice != 'X');
                         break;
+                    case 7:
+                        saveData();
+                        break;
+                    case 8:
+                        loadData();
+                        break;
                     default:
                         if(choice != 0){
                             System.out.println("the selected number is invalid. try again!");
@@ -115,10 +124,22 @@ public class ClientController{
             System.out.println("invalid input.please enter a valid output");
         } catch (DuplicateClientException e) {
            e.getMessage();
-
         } catch (ValidationException e) {
             System.out.println(e.getMessage());
+        } catch (FileException e) {
+            System.out.println(e.getMessage());
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
         }
+    }
+
+    private void loadData() throws FileException, FileNotFoundException {
+        clientFacade.loadData();
+    }
+
+    private void saveData() throws FileException {
+        clientFacade.saveData();
+        System.out.println("data saved successfully!");
     }
 
 

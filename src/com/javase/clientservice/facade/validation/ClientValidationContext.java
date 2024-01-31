@@ -8,4 +8,6 @@ public class ClientValidationContext extends ValidationContext<ClientDto>{
         addValidationItem(new PersonalClientValidation());
         addValidationItem(new LegalClientValidation());
     }
+
+
 }

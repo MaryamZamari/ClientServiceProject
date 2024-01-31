@@ -2,7 +2,9 @@ package com.javase.clientservice.model;
 
 import com.javase.clientservice.utility.IdGeneratorUtil;
 
-public class ContactNumber {
+import java.io.Serializable;
+
+public class ContactNumber implements Serializable {
     private int id;
     private String number;
     private boolean deleted;

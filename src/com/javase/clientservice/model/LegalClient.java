@@ -1,9 +1,10 @@
 package com.javase.clientservice.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class LegalClient extends Client{
+public class LegalClient extends Client implements Serializable {
     private String contactPerson;
     private String industry;
     private String registrationNumber;

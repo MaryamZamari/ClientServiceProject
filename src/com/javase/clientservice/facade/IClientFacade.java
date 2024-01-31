@@ -2,7 +2,10 @@ package com.javase.clientservice.facade;
 
 import com.javase.clientservice.dto.ClientDto;
 import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.service.exception.FileException;
 import com.javase.clientservice.service.exception.ValidationException;
+
+import java.io.FileNotFoundException;
 
 public interface IClientFacade {
     void addClient(ClientDto client) throws DuplicateClientException, ValidationException;
@@ -13,4 +16,6 @@ public interface IClientFacade {
     void deleteClientById(int cliendId);
     void printAllNumbersOfClient(int cliendId);
     void printAllClients(); //TODO : Refactor it to get a list of clients instead of void and add a method to get the deleted customers.
+    void saveData() throws FileException;
+    void loadData() throws FileException, FileNotFoundException;
 }

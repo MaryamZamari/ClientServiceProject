@@ -5,9 +5,13 @@ import com.javase.clientservice.mapper.ClientMapper;
 import com.javase.clientservice.model.Client;
 import com.javase.clientservice.service.ClientService;
 import com.javase.clientservice.service.exception.DuplicateClientException;
+import com.javase.clientservice.service.exception.FileException;
 import com.javase.clientservice.service.exception.ValidationException;
 import com.javase.clientservice.facade.validation.ClientValidationContext;
 import com.javase.clientservice.facade.validation.ValidationContext;
+
+import java.io.FileNotFoundException;
+import java.io.ObjectInputStream;
 
 public class ClientFacade implements IClientFacade {
     /*
@@ -77,6 +81,16 @@ public class ClientFacade implements IClientFacade {
     public void printAllClients() {
         clientService.printAllClients();
     }
+
+    @Override
+    public void saveData() throws FileException {
+        clientService.saveData();
+    }
+
+    @Override
+    public void loadData() throws FileException, FileNotFoundException {
+        clientService.loadData();
+           }
 
 
 }

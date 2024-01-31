@@ -30,7 +30,9 @@ public class Console{
                 "3.Edit a client\n" +
                 "4.Removing a client \n" +
                 "5.Printing all the Clients.\n" +
-                "6.Number Menu _ Functionalities related to numbers of a client \n"
+                "6.Number Menu _ Functionalities related to numbers of a client \n" +
+                "7.Save data.\n" +
+                "8.Load data.\n"
         );
     }
 

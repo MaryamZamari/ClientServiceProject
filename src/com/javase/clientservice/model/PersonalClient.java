@@ -1,9 +1,10 @@
 package com.javase.clientservice.model;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class PersonalClient extends Client{
+public class PersonalClient extends Client implements Serializable {
     private String surname;
     private Date birthday;
     private String nationality;

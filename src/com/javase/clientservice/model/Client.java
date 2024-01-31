@@ -2,9 +2,11 @@ package com.javase.clientservice.model;
 
 import com.javase.clientservice.utility.IdGeneratorUtil;
 import com.javase.clientservice.utility.PasswordEncoderUtil;
+
+import java.io.Serializable;
 import java.util.List;
 
-public abstract class Client {
+public abstract class Client implements Serializable {
     private Integer id;
     private String name;
     private String fiscalCode;
